@@ -1,0 +1,137 @@
+<button *ngIf="isAdmin()" type="button" class="accent-btn" data-toggle="modal" data-target=".create-show-modal">Add a show</button>
+
+<div *ngIf="successCreated" class="alert alert-success" role="alert">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h5 class="alert-heading">Show Created</h5>
+  <p> {{successCreatedMessage}} </p>
+  <h></h>
+</div>
+
+<div class="modal fade create-show-modal" tabindex="-1" role="dialog" aria-labelledby="Create shows modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create a show</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form" [formGroup]="showForm" (ngSubmit)="addShow()">
+
+          <div class="form-group">
+            <label for="inputTitle">Title</label>
+            <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                   aria-describedby="titleHelp" placeholder="Enter title">
+            <div *ngIf="submitted && showForm.controls.title.errors" class="error">
+              <small class="form-text text-warning" *ngIf="showForm.controls.title.errors.required">
+                Title of show is required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputDescription">Description</label>
+            <textarea rows="3" name="description" formControlName="description" class="form-control" id="inputDescription"
+                      aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
+            <div *ngIf="submitted && showForm.controls.description.errors" class="error">
+              <small class="form-text text-warning" *ngIf="showForm.controls.description.errors.required">
+                Description of show is required!
+              </small>
+            </div>
+          </div>
+
+
+
+          <div class="form-group">
+            <label for="inputLocation" class="mr-2">Location</label>
+            <select value="" (ngModelChange)="locationSet($event)" class="col-sm-6 custom-select custom-select-sm" id="inputLocation" formControlName="location">
+              <option *ngFor="let location of locations" value="{{location.id}}">{{location.description}}, {{location.city}}</option>
+            </select>
+            <div *ngIf="submitted && showForm.controls.location.errors" class="error">
+              <small class="form-text text-warning" *ngIf="showForm.controls.location.errors.required">
+                Location is required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="location">
+            Set prices and sectors for {{location.description}}:
+            <div class="small">
+              Use letters as sector names. Special sector <strong>0</strong> stands for standing room
+            </div>
+            <div *ngIf="submitted && detailedSeatsError" class="error">
+              <small class="form-text text-warning">
+                {{detailedSeatsErrorMsg}}
+              </small>
+            </div>
+            <div class="d-flex justify-content-center">
+              <div class="d-flex flex-wrap justify-content-center align-content-center m-2" [style.width.rem]="containerWidth">
+                <div *ngFor="let seat of seats" class="seat small-seat seat-sector-{{findSector(seat)}}" [ngClass]="{'standing-room-small': findSector(seat) === '0', 'no-seat': !seat.realSeat}" (click)="selectSeat(seat)">
+                </div>
+              </div>
+              <div class="m-2">
+                <button type="button" class="btn btn-primary" (click)="addSector()">Add a sector</button>
+                <div *ngFor="let sector of sectors; index as i" class="my-2 d-flex align-items-center">
+                  <div class="form-check mr-2">
+                    <input class="form-check-input" id="sector-{{i}}" type="radio" name="sectorRadio" [(ngModel)]="sectorRadio" [ngModelOptions]="{standalone: true}" [value]="sector.id">
+                    <label class="form-check-label" for="sector-{{i}}">
+                    </label>
+                  </div>
+                  <label class="mr-1">
+                    Sector <input type="text" [(ngModel)]="sector.name" [ngModelOptions]="{standalone: true}" class="form-control w-small">
+                  </label>
+                  <label>
+                    Price (€)<input type="text" [(ngModel)]="sector.price" [ngModelOptions]="{standalone: true}" class="form-control w-small">
+                  </label>
+                  <button type="button" class="close ml-2" aria-label="Close" (click)="removeSector(sector)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="inputStartDate" class="mt-2">Start date</label>
+            <input type="date" class="form-control" id="inputStartDate" formControlName="startDate">
+            <div *ngIf="submitted && showForm.controls.startDate.errors" class="error">
+              <small class="form-text text-warning" *ngIf="showForm.controls.startDate.errors.required">
+                Start date of show is required!
+              </small>
+              <small class="form-text text-warning" *ngIf="showForm.controls.startDate.errors.validDate">
+                Start date can't be in the past!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputStart" class="mt-2">Start time</label>
+            <input type="time" class="form-control" id="inputStart" formControlName="start">
+            <div *ngIf="submitted && showForm.controls.start.errors" class="error">
+              <small class="form-text text-warning" *ngIf="showForm.controls.start.errors.required">
+                Start time of show is required!
+              </small>
+              <small class="form-text text-warning" *ngIf="showForm.controls.start.errors.pattern">
+                Start time must be of format 15:30!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="eventDetail">
+            <small class="form-text text-info">The duration of the show is {{eventDetail.duration}} minutes.</small>
+          </div>
+          <div class="text-center">
+            <button type="button" class="accent-btn" (click)="addShow()" > Create and publish show </button> <br>
+            <a type="button" data-dismiss="modal" style="margin-bottom: 30px" #closeModal>Cancel</a>
+          </div>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

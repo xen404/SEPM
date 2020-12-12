@@ -1,0 +1,15 @@
+.card{
+  margin-bottom: 10px;
+}
+
+.modal-title {
+  text-align: center;
+}
+
+button {
+  display: block;
+}
+
+#infoText {
+  margin-top: 40px;
+}

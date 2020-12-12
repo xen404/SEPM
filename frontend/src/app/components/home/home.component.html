@@ -1,0 +1,65 @@
+<div class="container" *ngIf="!authService.isLoggedIn()">
+  <div class="row">
+    <div class="col-5">
+      <div class="text">
+        <p>
+          On <span style="color:#202E53">TICKETLINE</span> you can buy tickets for any event you like. Concert, opera,
+          theatre or circus, we have tickets for everyone. And for all the die hard fans: We even got the matching
+          merchandise for your favorite event.
+        </p>
+        <button type="button" class="accent-btn" routerLink="/signUp"> Sign up now</button>
+      </div>
+    </div>
+    <div class="col-7">
+      <div class="img-space">
+        <img src="../../../assets/images/Illustration.png" class="img-responsive"/>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row" *ngIf="authService.isLoggedIn()">
+  <div class="col-12">
+    <h2> What's new </h2>
+    <button type="button" class="secondary-btn-sm" routerLink="/news" style="margin: 0"> Show all news</button>
+  </div>
+  <div class="row" style="padding: 15px">
+    <div class="col-xl-3 col-lg-4 p-2" *ngFor="let news of getNews()">
+
+      <div class="card h-100">
+
+        <img class="card-img-top" [src]="getSanitizer(news.id)" alt="Card image cap">
+        <div class="card-img-overlay">
+          <span class="badge badge-pill badge-primary" style="float: right"> new </span>
+        </div>
+
+        <div class="card-body">
+          <h5 class="card-title">{{news.title}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{news.publishedAt | date}}</h6>
+          <p class="card-text"><small>{{news.summary}}</small></p>
+
+        </div>
+        <div class="card-footer">
+          <div class="card-link">
+            <button (click)="getNewsDetails(news.id)" type="button" class="primary-btn" style="align-self: center">
+              Read more
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div style="margin-top: 80px">
+  <app-top-events *ngIf="authService.isLoggedIn()">
+
+
+  </app-top-events>
+</div>
+
+
+

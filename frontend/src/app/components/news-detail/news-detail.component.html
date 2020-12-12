@@ -1,0 +1,24 @@
+<div *ngIf="news">
+
+  <div class="page-header">
+    <img [src]="getSanitizer(image)" class="img-responsive fit-image" alt="Responsive image" >
+  </div>
+
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-lg-8 mx-auto">
+        <h2 class="font-weight-light">{{news.title}}</h2>
+        <p class="lead"><span class="font-italic">{{news.publishedAt | date}}</span> </p>
+        <p class="mt-2"><em> {{news.summary}} </em></p>
+        <p class="mt-2 page-header"> {{news.text}} </p>
+
+      </div>
+
+      </div>
+    </div>
+
+
+
+</div>

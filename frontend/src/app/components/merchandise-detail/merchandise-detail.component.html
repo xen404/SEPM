@@ -1,0 +1,33 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="getBonusModalLabel">Do you want to redeem this bonus for {{merchandise.bonusPoints}}
+      bonus points?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <img [src]="getSanitizer()" class="card-img" alt="...">
+      </div>
+      <div class="col-md-6">
+        <h5>{{merchandise.title}} </h5>
+        <p><small class="text-muted">{{merchandise.description}}</small></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <p id="infoText">Your bonus points will be reduced by {{merchandise.bonusPoints}} points. </p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="secondary-btn" (click)="activeModal.close()" style="float: left">Close</button>
+    <button type="button" class="primary-btn" (click)="redeemBonus()" style="float: right">
+      Yes, get this bonus
+    </button>
+  </div>
+</div>
+
+

@@ -1,0 +1,106 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<div class="orderBox">
+  <div class="card">
+    <div class="card-body">
+      <div class="orderNumber">
+        <h5 class="card-title"><b>Order {{orderNumber + 1}}</b></h5>
+      </div>
+      <div style="float:right;">
+        <button *ngIf="orderType == 'PURCHASED' && !past" (click)=" exportPurchasedTicketPdf()"  class="primary-btn">Download PDF</button>
+        <button *ngIf="orderType == 'RESERVED' && !past" class="primary-btn mr-3" type="button" data-toggle="modal" data-target=".purchase-modal" data-keyboard="false" data-backdrop="static" (click)="emitTickets()">Purchase Ticket(s)</button>
+        <button *ngIf="!past" [ngClass]="{'secondary-btn': expandCheckBoxes == true}" class="primary-btn"  (click)="showCheckBoxes()"> Edit
+      </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+  <div *ngFor="let ticket of ticketList; let i = index">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+
+            <div class="leftSide">
+              <h5 class="card-title"><b>{{ticket.showTitle}}</b>
+                <div>
+                  <button class="accent-btn-xs" [disabled]="true"> {{ticket.status}} </button>
+                </div>
+                  <div class="date">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    {{changeDate(ticket.showStartDate)}} {{ticket.showStartTime.toString().substring(0, 5)}}
+                  </div>
+                  <div class="seats">
+                    <i class="fa fa-ticket" aria-hidden="true"></i>
+                    Sector {{ticket.sector}} · Row {{ticket.seat.rowNr}}, Seat {{ticket.seat.seatNr}}
+                  </div>
+              </h5>
+            </div>
+
+            <div class="rightSide">
+              <label>
+                <input *ngIf="expandCheckBoxes" type="checkbox" [value]="ticket.id"
+                       (change)="onCheckboxChange($event)"
+                       style="float: right;"/>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="expandCheckBoxes">
+    <p class="error" *ngIf="this.form.controls['checkArray'].errors?.required">
+      Checkbox is required, select at least one value.
+    </p>
+    <button class="accent-btn"  [disabled]="this.form.controls['checkArray'].errors?.required" [ngClass]="{'disabled-primary-btn': this.form.controls['checkArray'].errors?.required}" type="submit"  data-toggle="modal" data-target=".purchase-modal" data-keyboard="false" data-backdrop="static">Cancel Ticket(s)</button>
+    <div class="modal fade purchase-modal" tabindex="-1" role="dialog" aria-labelledby="Purchase tickets modal" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+
+        <div *ngIf="!canceled" class="modal-content">
+        <div class="modal-content">
+          <div class="modal-body text-left">
+            <div class="my-5 text-center">
+              <h4 class="mb-4">Are you sure you want to delete the tickets?</h4>
+              <button (click)=" cancelSuccessful(ticketList[0].status)" class="secondary-btn">Yes</button>
+              <a type="button" class="primary-btn" href="/my-orders">No</a>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <div *ngIf="canceled && purchased " class="modal-content">
+          <div class="modal-body text-left">
+            <div class="my-5 text-center">
+              <h4 class="mb-4">Purchased ticket cancelled!</h4>
+              <p class="mb-4"> {{cancelTicketSuccess}}</p>
+              <p class="mb-4">Download invoice for details. </p>
+              <button (click)=" exportCancelTicketPdf()" class="accent-btn">Download PDF</button>
+              <a type="button" class="primary-btn" href="/my-orders">Back to My Orders</a>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="canceled && reserved" class="modal-content">
+          <div class="modal-body text-left">
+            <div class="my-5 text-center">
+              <h4 class="mb-4">Reserved ticket cancelled!</h4>
+              <p class="mb-4">Your invoice:</p>
+              <a type="button" class="primary-btn" href="/my-orders">Back to My Orders</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</form>

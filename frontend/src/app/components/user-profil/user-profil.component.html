@@ -1,0 +1,155 @@
+<div class="mt-4 container">
+
+  <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong> A problem occurred!</strong> {{ errorMessage }}
+    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Done!</strong> {{ successMessage }}
+    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h1>My Profile</h1>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col">
+
+      <form class="form" [formGroup]="editProfileForm" (ngSubmit)="saveChanges()">
+
+        <div class="form-group">
+          <label for="inputFirstName">First name</label>
+          <input type="text" name="firstName" formControlName="firstName" class="form-control" id="inputFirstName"
+                 aria-describedby="firstNameHelp" placeholder="Enter first name">
+          <div *ngIf="submitted && editProfileForm.controls.firstName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="editProfileForm.controls.firstName.errors.required">Your first name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputLastName">Last name</label>
+          <input type="text" name="lastName" formControlName="lastName" class="form-control" id="inputLastName"
+                 aria-describedby="lastNameHelp" placeholder="Enter last name">
+          <div *ngIf="submitted && editProfileForm.controls.lastName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="editProfileForm.controls.lastName.errors.required">Your last name is
+              required!
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputMailAddress">Mail Address</label>
+          <input type="text" name="mailAddress" formControlName="mailAddress" class="form-control" id="inputMailAddress"
+                 aria-describedby="mailAddressHelp" placeholder="Enter mail address">
+          <div *ngIf="submitted && editProfileForm.controls.mailAddress.errors" class="error">
+            <small class="form-text text-warning" *ngIf="editProfileForm.controls.mailAddress.errors.required">Your mail address is
+              required!
+            </small>
+            <small class="form-text text-warning" *ngIf="editProfileForm.controls.mailAddress.errors.pattern">Your mail address is
+              invalid!
+            </small>
+          </div>
+        </div>
+
+        <div class="password">
+          <h5> Password </h5>
+          <button type="button" class="secondary-btn-sm" style="float: right" (click)="changePassword()" *ngIf="!editPassword"> Change Password </button>
+          <button type="button" class="secondary-btn-sm" style="float: right" (click)="cancelPasswordEdit()" *ngIf="editPassword"> Cancel </button>
+        </div>
+
+        <div class="changePassword" *ngIf="editPassword">
+
+
+          <form class="form" [formGroup]="editPasswordForm">
+
+            <div class="form-group">
+              <label for="inputCurrentPassword">Current Password</label>
+              <input type="password" name="currentPassword" formControlName="currentPassword" class="form-control" id="inputCurrentPassword"
+                     placeholder="Type in your password">
+              <div *ngIf="passwordEdited && submitted && editPasswordForm.controls.currentPassword.errors" class="error">
+                <small class="form-text text-warning" *ngIf="editPasswordForm.controls.currentPassword.errors.required">Your password
+                  is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputNewPassword">New password </label>
+              <input type="password" name="newPassword" formControlName="newPassword" class="form-control" id="inputNewPassword"
+                     aria-describedby="newPasswordHelp" placeholder="Type in a new password">
+              <div *ngIf="passwordEdited && submitted && editPasswordForm.controls.newPassword.errors" class="error">
+                <small class="form-text text-warning" *ngIf="editPasswordForm.controls.newPassword.errors.required">Password is required!
+                </small>
+                <small class="form-text text-warning" *ngIf="editPasswordForm.controls.newPassword.errors.minlength">Your password
+                  must be at least 8 characters long!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputNewPasswordRepeated">Confirm password </label>
+              <input type="password" name="newPasswordRepeated" formControlName="newPasswordRepeated" class="form-control" id="inputNewPasswordRepeated"
+                     aria-describedby="newPasswordRepeatedHelp" placeholder="Repeat password">
+              <div *ngIf="passwordEdited && submitted && editPasswordForm.controls.newPasswordRepeated.errors" class="error">
+                <small class="form-text text-warning" *ngIf="editPasswordForm.controls.newPasswordRepeated.errors.required">Your have to confirm
+                  your password!
+                </small>
+                <small class="form-text text-warning" *ngIf="editPasswordForm.controls.newPasswordRepeated.errors.misMatch">Your password is
+                  incorrect!
+                </small>
+              </div>
+            </div>
+          </form>
+        </div>
+
+
+        <button type="button" class="delete-btn-sm" data-toggle="modal" data-target="#deleteAccountModal">Delete account</button>
+
+        <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel" *ngIf="!success">Are you sure you want to delete your account?</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Deleting your account is not revocable. You would have to create a new account in order to use the webshop.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="secondary-btn" data-dismiss="modal">Close</button>
+                <button type="button" class="primary-btn" data-dismiss="modal" (click)="deleteAccount()">Yes, delete account</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="col">
+
+    </div>
+
+  </div>
+
+  <div class="row">
+    <button class="primary-btn" (click)="saveChanges()"> Save changes </button>
+  </div>
+</div>
+
+

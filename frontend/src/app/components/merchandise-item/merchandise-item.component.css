@@ -1,0 +1,28 @@
+.card{
+  margin-bottom: 10px;
+}
+
+.card-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.modal-title {
+  text-align: center;
+}
+
+button {
+  display: block;
+}
+
+.accent-btn-xs {
+  background: transparent;
+  border: 1.5px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 15px;
+  color: black;
+  text-align: center;
+  line-height: 25px;
+}

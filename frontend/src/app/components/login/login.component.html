@@ -1,0 +1,79 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Authentication problems!</strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div *ngIf="deleteSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Done!</strong> {{ successMessage }}
+  <button type="button" (click)="vanishSuccess()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="pt-1">
+  <div class="row">
+
+    <div class="col-md-7 mx-auto">
+      <div class="text">
+        <div class="a">
+          <h5>
+            Welcome to Ticketline!
+            <br/> The market leading webshop for event tickets and merchandise.
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formLogin"></span>
+
+      <div class="card rounded-1">
+        <div class="card-header">
+          <div class="a">
+            <h3 class="mb-0">Login</h3>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+
+            <div class="form-group">
+              <label for="inputUsername">Email</label>
+              <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
+                     aria-describedby="usernameHelp" placeholder="Enter email">
+              <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
+                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" formControlName="password" class="form-control" id="password"
+                     placeholder="Password">
+              <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
+                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
+                  is
+                  required!
+                </small>
+                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.minlength">Your password
+                  must be at least 8 characters long!
+                </small>
+              </div>
+            </div>
+
+            <div class="a">
+              <button type="button" (click)="loginUser()" class="primary-btn">Login</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

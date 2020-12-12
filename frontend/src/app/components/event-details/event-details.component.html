@@ -1,0 +1,83 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<div *ngIf="event">
+
+  <div class="page-header">
+    <img [src]="getSanitizer()" class="img-responsive fit-image" alt="Responsive image" >
+  </div>
+
+  <div *ngIf="successCreated" class="alert alert-success" role="alert">
+    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h5 class="alert-heading">Show Created</h5>
+    <p> {{successCreatedMessage}} </p>
+    <h></h>
+  </div>
+
+
+  <div class="containerCards">
+    <h2 style="margin-top: 30px;">{{event.title}}
+    </h2>
+    <div class="my-4">
+      <p> {{event.description}}</p>
+    </div>
+    <div class="artistsShow" *ngIf="event.artists.length > 0"><b>ARTISTS</b>
+      <div class="card-container">
+        <div  *ngFor="let artist of event.artists">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{artist.name}}
+                    <button routerLink="/artist-detail/{{artist.id}}" type="button" class="primary-btn" style="float: right;">
+                      Details </button>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <b>SHOWS</b> <app-add-show *ngIf="isAdmin()"></app-add-show>
+    <div class="shows" *ngIf="event.shows.length > 0 else elseBlock" >
+      <div class="card-container">
+        <div  *ngFor="let show of event.shows">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{event.title}}    <button routerLink="/show-detail/{{show.id}}" type="button" class="primary-btn" style="float: right;" *ngIf="!isAdmin()">
+                    Buy ticket(s) </button></h5>
+                  <div class ="location">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i> {{show.location.description}}
+                  </div>
+                  <div class="date">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    {{this.changeDate(show.startDate)}} {{show.startTime.toString().substring(0,5)}} </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #elseBlock> <br>No shows for this event have been added yet. </ng-template>
+    <div class="merchandise" *ngIf="merchandiseItems.length > 0">
+      <b>MERCHANDISE FOR THIS EVENT</b>
+      <div class="merchandiseUser" *ngIf="!isAdmin()">
+        <app-merchandise-item *ngFor="let merchandise of merchandiseItems" [buyOption]="true"
+                              [merchandise]="merchandise">
+        </app-merchandise-item>
+      </div>
+      <div class="merchandiseAdmin" *ngIf="isAdmin()">
+        <app-merchandise-item *ngFor="let merchandise of merchandiseItems" [showAllDetails]="true"
+                              [merchandise]="merchandise">
+        </app-merchandise-item>
+      </div>
+    </div>
+    </div>
+
+  </div>

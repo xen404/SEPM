@@ -1,0 +1,238 @@
+<div class="jumbotron">
+  <div id="black"></div>
+  <div style="" class="animated fadeInDown">
+    <div class="container-fluid">
+      <div class="col-md-5 col-md-offset-1">
+        <h1>News<br class="visible-lg "/></h1>
+        <hr style="width:25%;text-align:left;margin:30px 0; border:2.5px solid #fff;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div *ngIf="successCreated" class="alert alert-success" role="alert">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h5 class="alert-heading">News Created</h5>
+  <p> {{successCreatedMessage}} </p>
+  <h></h>
+</div>
+
+
+<div class="mt-4 container">
+
+  <div class="row p-2 mb-4">
+
+    <button *ngIf="isAdmin()" type="button" class="accent-btn" data-toggle="modal" data-target=".create-message-modal">
+      Add news article
+    </button>
+
+    <div class="modal fade create-message-modal" tabindex="-1" role="dialog" aria-labelledby="Create news modal"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create news</h5>
+          </div>
+          <div class="modal-body">
+            <form class="form" [formGroup]="newsForm" (ngSubmit)="addNews()">
+
+              <div class="form-group">
+                <label for="inputTitle">Title</label>
+                <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                       aria-describedby="titleHelp" placeholder="Enter title">
+                <div *ngIf="submitted && newsForm.controls.title.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="newsForm.controls.title.errors.required">Your title is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <fieldset class="form-group">
+
+                  <label>Upload Image </label>
+                  <div *ngIf="imageError"
+                       class="alert alert-danger">
+                    {{ imageError }}
+                  </div>
+                  <div *ngIf="submitted && newsForm.controls.image.errors">
+                    <small class="form-text text-warning">
+                      An image is required!
+                    </small>
+                  </div>
+                  <div class="custom-file fileInputProfileWrap">
+                    <input type="file" (change)="onFileSelected($event)" class="fileInputProfile">
+                    <div class="img-space">
+
+                      <ng-container *ngIf="isImageSaved; else elseTemplate">
+                        <img [src]="cardImageBase64">
+                      </ng-container>
+                      <ng-template #elseTemplate>
+
+                        <img src="../../../assets/images/placeholder.png" class="img-responsive"/>
+                      </ng-template>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="form-group">
+                <label for="inputSummary">Summary</label>
+                <textarea rows="3" name="summary" formControlName="summary" class="form-control" id="inputSummary"
+                          aria-describedby="summaryHelp" placeholder="Enter summary"></textarea>
+                <div *ngIf="submitted && newsForm.controls.summary.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="newsForm.controls.summary.errors.required">Your summary
+                    is
+                    required!
+                  </small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputText">Text</label>
+                <textarea rows="6" name="text" formControlName="text" class="form-control" id="inputText"
+                          aria-describedby="textHelp" placeholder="Enter text"></textarea>
+                <div *ngIf="submitted && newsForm.controls.text.errors" class="error">
+                  <small class="form-text text-warning" *ngIf="newsForm.controls.text.errors.required">Your text is
+                    required!
+                  </small>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="text-center">
+            <button type="button" class="accent-btn" (click)="addNews()" style="margin-top: 50px">
+              Create and publish news article
+            </button>
+            <br>
+            <a type="button" data-dismiss="modal" style="margin-bottom: 30px" #closeModal (click)="clearForm()">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="primary-btn-sm" (click)="setUnseen()" style="margin: 0"> Unseen News </button>
+  <button type="button" class="secondary-btn-sm" (click)="setSeen()" style="margin: 0"> Seen News </button>
+
+  <div *ngIf="seen">
+    <div class="row" >
+      <div class="col-xl-3 col-lg-4 p-2"
+           *ngFor="let news_item of getSeenNews()">
+
+      <div class="card h-100 ng-cloak">
+
+
+          <img class="card-img-top" [src]="getSanitizer(news_item.id)" alt="Card image cap">
+          <div class="card-img-overlay">
+            <span class="badge badge-pill badge-secondary" style="float: right">✓</span>
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-title">{{news_item.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{news_item.publishedAt | date}}</h6>
+            <p class="card-text"><small>{{news_item.summary}}</small></p>
+
+          </div>
+
+          <div class="card-footer">
+            <div class="card-link">
+              <button [routerLink]="['/news-detail',news_item.id]" type="button" class="primary-btn" style="align-self: center">
+                Read more
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class = pagination *ngIf="newsNum>pageSize">
+      <ui class="nav nav-pills">
+        <li>
+          <a class="nav-link" *ngIf="pageSeen-1>=0" href="" (click)="setPageSeen(pageSeen-1, $event)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+
+        <li class="nav-item" *ngFor="let p of pagesSeen; let i=index"style="margin-bottom: 30px">
+          <a class="nav-link" *ngIf="i<=paginationLimitUpSeen && i >= paginationLimitDownSeen" href="" (click)="setPageSeen(i, $event)" [ngClass]="{'active':i==pageSeen}">{{i}}</a>
+        </li>
+
+        <li>
+          <a class="nav-link" *ngIf="pagesSeen+1<pagesSeen.length" href="" (click)="setPageSeen(pagesSeen+1, $event)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ui>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="unseen">
+    <div class="row" style="padding: 15px">
+      <div class="col-xl-3 col-lg-4 p-2" *ngFor="let news of getUnseenNews()">
+
+        <div class="card h-100">
+
+          <img class="card-img-top" [src]="getSanitizer(news.id)" alt="Card image cap">
+          <div class="card-img-overlay">
+            <span class="badge badge-pill badge-primary" style="float: right"> new </span>
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-title">{{news.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{news.publishedAt | date}}</h6>
+            <p class="card-text"><small>{{news.summary}}</small></p>
+
+          </div>
+          <div class="card-footer">
+            <div class="card-link">
+              <button (click)="getNewsDetails(news.id)" type="button" class="primary-btn" style="align-self: center">
+                Read more
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class = pagination *ngIf="newsNum>pageSize">
+      <ui class="nav nav-pills">
+        <li>
+          <a class="nav-link" *ngIf="pageUnseen-1>=0" href="" (click)="setPageUnseen(pageUnseen-1, $event)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+
+        <li class="nav-item" *ngFor="let p of pagesUnseen; let i=index"style="margin-bottom: 30px">
+          <a class="nav-link" *ngIf="i<=paginationLimitUpUnseen && i >= paginationLimitDownUnseen" href="" (click)="setPageUnseen(i, $event)" [ngClass]="{'active':i==pageUnseen}">{{i}}</a>
+        </li>
+
+        <li>
+          <a class="nav-link" *ngIf="pageUnseen+1<pagesUnseen.length" href="" (click)="setPageUnseen(pageUnseen+1, $event)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ui>
+    </div>
+
+  </div>
+</div>
+
+

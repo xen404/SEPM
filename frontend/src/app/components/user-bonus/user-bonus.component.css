@@ -1,0 +1,47 @@
+h1 {
+  margin-bottom: 50px;
+}
+
+h5 {
+  margin:0;
+  display: inline-block;
+}
+
+.box {
+  background: transparent;
+  border: 3px solid #CE6A6B;
+  border-radius: 5px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-align: center;
+  line-height: 40px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin-left: 30px;
+  margin-right: 30px;;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #748EB6;;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+

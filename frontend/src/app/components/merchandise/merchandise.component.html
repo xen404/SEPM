@@ -1,0 +1,193 @@
+<div class="jumbotron">
+  <div id="black"></div>
+  <div style="" class="animated fadeInDown">
+    <div class="container-fluid">
+      <div class="col-md-5 col-md-offset-1">
+        <h1>Merchandise<br class="visible-lg "/></h1>
+        <hr style="width:25%;text-align:left;margin:30px 0; border:2.5px solid #fff;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="successCreated" class="alert alert-success" role="alert">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h5 class="alert-heading">Merchandise Created</h5>
+  <p> {{createdMerchandiseMessage}} </p>
+  <h></h>
+</div>
+
+
+<button class="accent-btn" data-toggle="modal" data-target=".create-merchandise-modal"> Add merchandise item</button>
+
+<div class="modal fade create-merchandise-modal" tabindex="-1" role="dialog"
+     aria-labelledby="Create merchandise modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create merchandise item</h5>
+      </div>
+      <div class="modal-body">
+        <form class="form" [formGroup]="createMerchForm" (ngSubmit)="addMerchItem()">
+
+          <div class="form-group">
+            <label for="inputTitle">Title</label>
+            <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                   aria-describedby="titleHelp" placeholder="Enter title">
+            <div *ngIf="submitted && createMerchForm.controls.title.errors" class="error">
+              <small class="form-text text-warning" *ngIf="createMerchForm.controls.title.errors.required">A title is
+                required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <fieldset class="form-group">
+
+              <label>Upload Image </label>
+              <div *ngIf="imageError"
+                   class="alert alert-danger">
+                {{ imageError }}
+              </div>
+              <div *ngIf="submitted && createMerchForm.controls.image.errors">
+                <small class="form-text text-warning">
+                  An image is required!
+                </small>
+              </div>
+              <div class="custom-file fileInputProfileWrap">
+                <input type="file" (change)="onFileSelected($event)" class="fileInputProfile">
+                <div class="img-space">
+
+                  <ng-container *ngIf="isImageSaved; else elseTemplate">
+                    <img [src]="cardImageBase64"/>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+
+                    <img src="../../../assets/images/placeholder.png" class="img-responsive"/>
+                  </ng-template>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="form-group">
+            <label for="inputDescription">Description</label>
+            <textarea rows="3" name="description" formControlName="description" class="form-control"
+                      id="inputDescription"
+                      aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
+            <div *ngIf="submitted && createMerchForm.controls.description.errors" class="error">
+              <small class="form-text text-warning" *ngIf="createMerchForm.controls.description.errors.required">A
+                description is
+                required!
+              </small>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="inputEvent" class="col-sm-2 col-form-label">Event</label>
+            <div class="col-sm-10">
+              <select class="col-sm-6 custom-select custom-select-sm" id="inputEvent" formControlName="event">
+                <option value="" disabled>Select an event</option>
+                <option *ngFor="let event of events" value="{{event.id}}">{{event.title}}</option>
+              </select>
+              <div *ngIf="submitted && createMerchForm.controls.event.errors" class="error">
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.event.errors.required">
+                  Event is required!
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPrice" class="col-sm-2 col-form-label">Price</label>
+            <div class="col-sm-10">
+              <input type="number" name="inputPrice" min="0" max="99" id="inputPrice" formControlName="price"
+                     style="width: 7em"> €
+              <div *ngIf="submitted && createMerchForm.controls.price.errors" class="error">
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.price.errors.required">
+                  A price is required!
+                </small>
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.price.errors.min">
+                  Price must be greater than Zero.
+                </small>
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.price.errors.pattern">
+                  That is not a valid price.
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputBonusPoints" class="col-sm-2 col-form-label">Bonus Points</label>
+            <div class="col-sm-10">
+              <input type="number" name="inputBonusPoints" min="0" max="99" id="inputBonusPoints"
+                     formControlName="bonusPoints" style="width: 7em">
+              <div *ngIf="submitted && createMerchForm.controls.bonusPoints.errors" class="error">
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.bonusPoints.errors.required">
+                  A bonus is required!
+                </small>
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.bonusPoints.errors.min">
+                  Bonus Points must be greater than Zero.
+                </small>
+                <small class="form-text text-warning" *ngIf="createMerchForm.controls.bonusPoints.errors.pattern">
+                  Bonus points must be an integer.
+                </small>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-check" style="margin-top: 60px">
+            <input type="checkbox" class="form-check-input" id="checkBonus" formControlName="isBonus">
+            <label class="form-check-label" for="checkBonus"> Is available as bonus</label>
+          </div>
+
+
+        </form>
+      </div>
+      <div class="text-center">
+        <button type="button" class="accent-btn" (click)="addMerchItem()" style="margin-top: 50px"> Create and publish
+          merchandise item
+        </button>
+        <br>
+        <a type="button" (click)="clearForm()" data-dismiss="modal" style="margin-bottom: 30px" #closeModal>Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="merchandise" *ngIf="merchandiseItems.length > 0" style="margin-top: 50px">
+  <b>ALL MERCHANDISE ITEMS</b>
+
+
+  <app-merchandise-item *ngFor="let merchandise of merchandiseItems" [showAllDetails]="true"
+                        [merchandise]="merchandise">
+  </app-merchandise-item>
+
+
+    <div class = pagination *ngIf="merchandiseNum>pageSize">
+      <ui class="nav nav-pills">
+        <li>
+          <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+
+        <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+          <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+        </li>
+
+        <li>
+          <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ui>
+    </div>
+
+</div>
+

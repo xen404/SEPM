@@ -1,0 +1,31 @@
+<div *ngIf="show">
+  <div class="mt-5 mb-4">
+    <h2>{{show.title}}</h2>
+    <h5 *ngIf="artists.length == 1">
+      {{artists[0].name}}
+    </h5>
+    <h5 *ngIf="artists.length > 1">
+      <span *ngFor="let artist of artists; index as i">
+        {{artist.name}}<span *ngIf="i < artists.length - 2">, </span>
+        <span *ngIf="i == artists.length - 2"> & </span>
+      </span>
+    </h5>
+  </div>
+
+  <div class="my-4">
+    <p>{{show.description}}</p>
+  </div>
+
+  <div class="my-4">
+    <strong>Show details</strong>
+    <p><span class="text-uppercase">{{show.location.city}}</span>, {{show.location.description}}</p>
+    <p class="mt-2"><b>Start </b> <i>{{startDate}} {{startTime}}</i> </p>
+    <p  class="mt-2"><b>End </b> <i>{{endDate}} {{endTime}}</i> </p>
+  </div>
+
+  <app-show-seats *ngIf="!past" class="my-5" [id]="show.id" [show]="show" [event]="event" [artists]="artists" [startDate]="startDate"
+                  [startTime]="startTime"
+                  [endDate]="endDate" [endTime]="endTime"></app-show-seats>
+
+  <div *ngIf="past" class="text-center"><h5>This show has already taken place.</h5></div>
+</div>

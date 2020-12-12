@@ -1,0 +1,53 @@
+.card-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+
+}
+
+.orderNumber {
+  display: flex;
+  align-self: center;
+}
+
+.container{
+  margin-top: 30px;
+}
+
+.card{
+  margin-bottom: 10px;
+}
+.containerCards{
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 100px;
+}
+
+.orderBox {
+  padding-top: 30px;
+}
+
+.accent-btn-xs {
+  background: transparent;
+  border: 1.5px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 15px;
+  color: black;
+  text-align: center;
+  line-height: 25px;
+  margin-top: 10px;
+}
+
+.seats{
+  color: grey;
+  padding-top: 10px;
+  font-size: medium;
+}
+
+.date{
+  color: grey;
+  padding-top: 20px;
+  font-size:  medium;
+}

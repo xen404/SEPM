@@ -1,0 +1,267 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  background-color: whitesmoke;
+}
+
+.primary-btn {
+  background: #748EB6;
+  border: 1px solid #748EB6;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 45px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin: 10px;
+}
+
+.disabled-primary-btn {
+  background: #9aa5b5 !important;
+  border: 1px solid #b3b4b5 !important;
+}
+
+.primary-btn-sm {
+  background: #748EB6;
+  border: 1px solid #748EB6;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color:  #FFFFFF;
+  text-align: center;
+  line-height: 30px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 2px solid #748EB6;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #748EB6;
+  text-align: center;
+  line-height: 45px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin: 10px;
+}
+
+.disabled-secondary-btn {
+  border: 2px solid #9aa5b5 !important;
+  color: #9aa5b5;
+}
+
+.secondary-btn-sm {
+  background: transparent;
+  border: 2px solid #748EB6;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #748EB6;
+  text-align: center;
+  line-height: 30px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+}
+
+.accent-btn{
+  border: 1px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 45px;
+  background-image: linear-gradient(270deg, #CE6A6B 0%, #FA9284 100%);
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin: 10px;
+}
+
+.accent-btn-sm {
+  background: transparent;
+  border: 2px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #CE6A6B;
+  text-align: center;
+  line-height: 30px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+}
+
+.accent-btn-outlined {
+  background: transparent;
+  border: 2px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 45px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin: 10px;
+}
+
+.delete-btn-sm {
+  background: transparent;
+  border: 2px solid darkred;
+  border-radius: 5px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 16px;
+  color: darkred;
+  text-align: center;
+  line-height: 30px;
+  min-width: 150px;
+  padding: 0 40px 0 40px;
+  margin: 20px 0 20px 0;
+}
+
+.primary-text {
+  color: #748EB6 !important;
+}
+
+.w-small {
+  width: 4rem !important;
+}
+
+.w-20rem {
+  width: 20rem !important;
+}
+
+.seat {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 100%;
+  background-color: #cbcbcb;
+  margin: 0.5rem;
+  cursor: pointer;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.seat:hover {
+  background-color: #a8a8a8;
+}
+
+.small-seat {
+  width: 1rem;
+  height: 1rem;
+  margin: 0.25rem;
+}
+
+.no-seat {
+  background-color: transparent !important;
+  cursor: auto !important;
+}
+
+.purchased-seat {
+  background-color: #dadada !important;
+  cursor: auto !important;
+}
+
+.reserved-seat {
+  background-color: #fff !important;
+  border: solid 1px black;
+  cursor: auto !important;
+}
+
+.selected-seat {
+  border: solid 4px #202E53;
+}
+
+.standing-room, .standing-room-legend, .standing-room-small {
+  border-radius: 0;
+  margin: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #f0e761;
+}
+
+.standing-room-legend {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.5rem;
+}
+
+.standing-room-small {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.legend-seat {
+  cursor: auto !important;
+}
+
+.seat-sector-A {
+  background-color: #f0bb86;
+}
+
+.seat-sector-A:hover {
+  background-color: #c8996a;
+}
+
+.seat-sector-B {
+  background-color: #d17da9;
+}
+
+.seat-sector-B:hover {
+  background-color: #b86a92;
+}
+
+.seat-sector-C {
+  background-color: #00c2e9;
+}
+
+.seat-sector-C:hover {
+  background-color: #0096bd;
+}
+
+.seat-sector-D {
+  background-color: #acb374;
+}
+
+.seat-sector-D:hover {
+  background-color: #8b925b;
+}
+
+.seat-sector-E {
+  background-color: #49b33d;
+}
+
+.seat-sector-E:hover {
+  background-color: #429236;
+}
+
+
+.admin-page-content {
+  width: calc(100% - 15rem);
+  margin-left: 14rem;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #748EB6;;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}

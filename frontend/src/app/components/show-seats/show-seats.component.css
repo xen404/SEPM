@@ -1,0 +1,5 @@
+.fit-image{
+  width: 100%;
+  object-fit: cover;
+  height: 430px; /* only if you want fixed height */
+}

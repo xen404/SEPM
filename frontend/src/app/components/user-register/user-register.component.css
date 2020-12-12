@@ -1,0 +1,25 @@
+div.a {
+  text-align: center;
+}
+
+div.b {
+  text-align: left;
+}
+
+div.c {
+  text-align: right;
+}
+
+div.d {
+  text-align: justify;
+}
+
+.card-header {
+  background-color: #bccce3;
+  letter-spacing: 5px;
+  font-family: "Lato", sans-serif;
+
+}
+.card-body {
+  background-color: #dfe8f7;
+}

@@ -1,0 +1,69 @@
+.image-wrap {
+  padding: 10px;
+  border: solid 1px #e0e0e0;
+  display: inline-block;
+}
+
+.img-space {
+  background-color: #FFFFFF;
+  height: auto;
+  width: 100%;
+  padding: 10px;
+  min-height:175px;
+}
+
+.img-space img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  cursor: pointer;
+}
+
+h2 {
+  display: inline-block;
+  float: left;
+  margin: 0 25px 0 0;
+}
+
+.card-link
+{
+  position:relative;
+}
+
+.card-footer {
+  text-align: center;
+  background-color: #FFFFFF;
+}
+
+.logoDark {
+  font-family: AppleGothic;
+  font-size: 35px;
+  color: #202E53;
+  letter-spacing: 0;
+  padding-left: 300px;
+}
+
+p {
+  text-align:center;
+  vertical-align: middle;
+  display: table-cell;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+}
+
+.text {
+  margin: 0;
+  position: absolute;
+  top: 30%;
+  margin-right: 20px;
+}
+
+.card-img-top {
+width: 100%;
+height: 20vh;
+object-fit: cover;
+}

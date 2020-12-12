@@ -1,0 +1,71 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/venues">Venues</a></li>
+    <li class="breadcrumb-item active" aria-current="page" *ngIf="location">{{location.description}}</li>
+  </ol>
+</nav>
+
+<div *ngIf="location">
+  <h2 style="margin-top: 30px;">{{location.description}}
+  </h2>
+  <h5>{{location.zipCode}} {{location.city}}, {{location.street}}
+  </h5>
+  <h5>
+    {{location.country}}
+  </h5>
+
+</div>
+
+<div style="margin-top: 30px;"> {{totalElements}} show(s)
+</div>
+
+<div class="containerCards">
+  <div class="card-container" >
+    <div  *ngFor="let show of this.shows">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{show.title}}
+                <button routerLink="/show-detail/{{show.id}}" type="button" class="primary-btn" style="float: right;">
+                  Details </button>
+              </h5>
+              <p class="card-text">{{show.description}}</p>
+              <div class = "time">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                {{show.startTime.toString().substring(0, 5)}} - {{show.endTime.toString().substring(0, 5)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class = pagination *ngIf="totalElements>pageSize">
+    <ui class="nav nav-pills">
+      <li>
+        <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+      <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+        <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+      </li>
+
+      <li>
+        <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ui>
+  </div>
+
+</div>

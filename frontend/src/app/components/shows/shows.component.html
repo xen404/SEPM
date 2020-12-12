@@ -1,0 +1,134 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>No search results: </strong>{{ errorMessage }}
+  <button type="button" (click)="vanishError() && clearForm()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="jumbotron">
+  <div id="black"></div>
+  <div style="" class="animated fadeInDown">
+    <div class="container-fluid">
+      <div class="col-md-5 col-md-offset-1">
+        <h1>Shows<br class="visible-lg "/></h1>
+        <hr style="width:25%;text-align:left;margin:30px 0; border:2.5px solid #fff;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container">
+  <form class="form-inline" [formGroup]="showForm">
+    <input class="form-control w-75" formControlName="title" (keyup.enter)="this.page=0; searchShow(this.search.value, this.location.value, this.price.value, this.date.value, this.time.value);" type="text" placeholder="Search for an Eventname" aria-label="Search" #search>
+    <button type="button" class="secondary-btn my-0 ml-sm-2" (click)="this.page=0; searchShow(this.search.value, this.location.value, this.price.value, this.date.value, this.time.value);" > Search </button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"  (click)="clearForm(); searchShow('','','','','')"  > <span aria-hidden="true">&times;</span></button>
+  </form>
+</div>
+
+<p>
+  <button style="padding-left: 70px" type="button" class="btn btn-link" (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+    Use Filter
+    <i class="fa fa-angle-down" aria-hidden="true"></i>
+  </button>
+</p>
+
+<div id="collapseExample" [ngbCollapse]="isCollapsed">
+  <div class="card" style="margin-right: 80px; margin-left: 70px;">
+    <div class="card-body">
+
+      <h6 style="margin-top: 3px">Filter</h6>
+      <form class="form-row" [formGroup]="showForm">
+
+        <div class="form-group col-md-3">
+          <label>Location</label>
+          <select class="form-control" formControlName="location" #location>
+            <option *ngFor="let location of locations" [value]="location"> {{location}}</option>
+          </select>
+        </div>
+
+        <div class="slidecontainer">
+          <p>Price: {{priceValue}} ‎€</p>
+          <input type="text" type="range" min="1" max="100" [value]="100" #price (change)="getSliderValue($event)" (oninput)="getSliderValue($event)">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Date</label>
+          <input type="date" class="form-control" id="inputStartDate" formControlName="date" #date>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>From</label>
+          <input type="time"  class="form-control" formControlName="time" #time placeholder="00:00:00">
+        </div>
+
+
+        <div class="form-row">
+          <div class="form-group col-md-8">
+            <button type="button" class="btn  btn-light" style="margin-top: 32px; margin-left: 10px" (click)="clearFormFilter(); searchShow(this.search.value, '','', '', ''); this.price.valueAsNumber = 100" >Delete</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="containerCards" *ngIf="!error">
+  <div class="numberShows">{{totalElements}} show(s) found </div>
+  <div *ngIf="searchShows.length===0">
+    <div class="alert alert-warning">
+      <strong>No Results</strong> There are no Shows found with this input. Try it again with another input.
+    </div>
+  </div>
+
+  <div class="card-container">
+    <div  *ngFor="let show of searchShows">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{show.eventTitle}}    <button routerLink="/show-detail/{{show.id}}" type="button" class="primary-btn" style="float: right;">
+                Buy ticket(s) </button></h5>
+                <div class ="location">
+                  <i class="fa fa-map-marker" aria-hidden="true"></i> {{show.location.description}}
+                </div>
+              <div class="date">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                {{this.changeDate(show.startDate)}} {{show.startTime.toString().substring(0,5)}} </div>
+              <!--<div> {{0}} event(s)</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class = pagination *ngIf="totalElements>pageSize">
+    <ui class="nav nav-pills">
+      <li>
+        <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+      <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+        <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+      </li>
+
+      <li>
+        <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ui>
+  </div>
+</div>

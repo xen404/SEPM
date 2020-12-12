@@ -1,0 +1,71 @@
+<div *ngIf="buyOption">
+  <div class="card mb-3" style="width: 100%;">
+    <div class="alert alert-secondary" role="alert" *ngIf=" merchandise.bonus && merchandise.bonusPoints <= userService.getLoggedInUser().bonusPoints">
+      This item is also available as a bonus! Go check out <b><i> My Bonus </i></b> to get this bonus.
+    </div>
+    <div class="row no-gutters">
+      <div class="col-md-3">
+        <img [src]="getSanitizer()" class="card-img" style="height: 200px" alt="../../../assets/images/Illustration.png">
+      </div>
+      <div class="col-md-6">
+        <div class="card-body">
+          <h5 class="card-title">{{merchandise.title}}</h5>
+          <p class="card-text"><small class="text-muted">{{merchandise.description}}</small></p>
+          <p class="card-text"> Price: {{merchandise.price}} € </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button class="secondary-btn" style="float: right" (click)="openDetailView()"> Buy item </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="!buyOption && !showAllDetails">
+  <div class="card mb-3" style="width: 100%;">
+    <div class="row no-gutters">
+      <div class="col-md-3">
+        <img [src]="getSanitizer()" class="card-img" style="height: 180px" alt="../../../assets/images/Illustration.png">
+      </div>
+      <div class="col-md-6">
+        <div class="card-body">
+          <h5 class="card-title">{{merchandise.title}}</h5>
+          <p class="card-text"><small class="text-muted">{{merchandise.description}}</small></p>
+          <p class="card-text"> Bonus points: {{merchandise.bonusPoints}}</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button class="primary-btn" style="float: right" (click)="openModal()"> Get this bonus </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAllDetails">
+  <div class="card mb-3" style="width: 100%;">
+    <div class="row no-gutters">
+      <div class="col-md-3">
+        <img [src]="getSanitizer()" class="card-img" alt="../../../assets/images/Illustration.png">
+      </div>
+      <div class="col-md-6">
+        <div class="card-body">
+          <h5 class="card-title">{{merchandise.title}}</h5>
+          <p class="card-text"><small class="text-muted">{{merchandise.description}}</small></p>
+          <p class="card-text"> Price: {{merchandise.price}} €</p>
+          <p class="card-text"> Bonus points: {{merchandise.bonusPoints}}</p>
+          <div *ngIf="merchandise.bonus">
+            <button class="accent-btn-xs" [disabled]="true"> Is available as a bonus </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

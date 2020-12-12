@@ -1,0 +1,94 @@
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+  margin: 30px;
+}
+
+td, th {
+  border: 1px solid #dfe8f7;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dfe8f7;
+}
+
+.accent-btn-xs {
+  background: transparent;
+  border: 1.5px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 15px;
+  color: #CE6A6B;
+  text-align: center;
+  line-height: 25px;
+}
+
+.secondary-btn-xs {
+  background: transparent;
+  border: 1.5px solid #748EB6;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 15px;
+  color: #748EB6;
+  text-align: center;
+  line-height: 25px;
+}
+
+.accent-btn-sm-filled {
+  background: #CE6A6B;
+  border: 1px solid #CE6A6B;
+  border-radius: 30px;
+  font-family: HelveticaNeue, sans-serif;
+  font-size: 15px;
+  color:  #FFFFFF;
+  text-align: center;
+  line-height: 25px;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 20%;
+  padding: 15px;
+  color:  #616161;
+}
+/* Create two equal columns that floats next to each other */
+.column-s {
+  margin-top: 27px;
+  float: left;
+  width: 20%;
+  padding: 15px;
+  color:  #616161;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #748EB6;;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+  border-radius: 5px;
+}

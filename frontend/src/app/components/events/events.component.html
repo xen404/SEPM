@@ -1,0 +1,247 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>No search results: </strong>{{ errorMessage }}
+  <button type="button" (click)="vanishError() && clearForm()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="jumbotron">
+  <div id="black"></div>
+  <div style="" class="animated fadeInDown">
+    <div class="container-fluid">
+      <div class="col-md-5 col-md-offset-1">
+        <h1>Events<br class="visible-lg "/></h1>
+        <hr style="width:25%;text-align:left;margin:30px 0; border:2.5px solid #fff;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="successCreated" class="alert alert-success" role="alert" style="width: 100%">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <h5 class="alert-heading">Event Created</h5>
+  <p> {{successCreatedMessage}} </p>
+
+  <button type="button" class="secondary-btn-sm" routerLink="/events-detail/{{id}}"> View new event </button>
+
+  <h></h>
+</div>
+
+<button *ngIf="isAdmin()" type="button" class="accent-btn" data-toggle="modal" data-target=".create-event-modal">Add a new event</button>
+<div class="modal fade create-event-modal" tabindex="-1" role="dialog" aria-labelledby="Create event modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form" [formGroup]="eventForm" (ngSubmit)="addEvent()">
+
+          <div class="form-group">
+            <label for="inputTitle">Title</label>
+            <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                   aria-describedby="titleHelp" placeholder="Enter title">
+            <div *ngIf="submitted && eventForm.controls.title.errors" class="error">
+              <small class="form-text text-warning" *ngIf="eventForm.controls.title.errors.required">Your title is
+                required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <fieldset class="form-group">
+
+              <label>Upload Image </label>
+              <div *ngIf="imageError"
+                   class="alert alert-danger">
+                {{ imageError }}
+              </div>
+              <div *ngIf="submitted && eventForm.controls.image.errors">
+                <small class="form-text text-warning">
+                  An image is required!
+                </small>
+              </div>
+              <div class="custom-file fileInputProfileWrap">
+                <input type="file" (change)="onFileSelected($event)" class="fileInputProfile">
+                <div class="img-space">
+
+                  <ng-container *ngIf="isImageSaved; else elseTemplate">
+                    <img [src]="cardImageBase64"/>
+                  </ng-container>
+                  <ng-template #elseTemplate>
+
+                    <img src="../../../assets/images/placeholder.png" class="img-responsive"/>
+                  </ng-template>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="form-group">
+            <label for="inputCategory">Category</label>
+            <select name="category" formControlName="category" class="form-control" id="inputCategory"
+                    aria-describedby="categoryHelp" placeholder="Choose category">
+              <option value="CABARET">CABARET</option>
+              <option value="CINEMA">CINEMA</option>
+              <option value="CONCERT">CONCERT</option>
+              <option value="CIRCUS">CIRCUS</option>
+              <option value="OPERA">OPERA</option>
+              <option value="MUSICAL">MUSICAL</option>
+              <option value="THEATRE">THEATRE</option>
+            </select>
+            <div *ngIf="submitted && eventForm.controls.category.errors" class="error">
+              <small class="form-text text-warning" *ngIf="eventForm.controls.category.errors.required">Your category is
+                required!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputDuration">Duration <small>(in minutes, eg: 120 for a 2 hours event)</small></label>
+            <input type="number" name="duration" formControlName="duration" class="form-control" id="inputDuration"
+                   aria-describedby="durationHelp" placeholder="Enter duration">
+            <div *ngIf="submitted && eventForm.controls.duration.errors" class="error">
+              <small class="form-text text-warning" *ngIf="eventForm.controls.duration.errors.required">Your duration is
+                required!
+              </small>
+              <small class="form-text text-warning" *ngIf="eventForm.controls.duration.errors.min">Your duration must be
+                positive!
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputDescription">Description</label>
+            <textarea rows="6" name="text" formControlName="description" class="form-control" id="inputDescription"
+                      aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
+            <div *ngIf="submitted && eventForm.controls.description.errors" class="error">
+              <small class="form-text text-warning" *ngIf="eventForm.controls.description.errors.required">Your description is
+                required!
+              </small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="text-center">
+        <button type="button" class="accent-btn" (click)="addEvent()"> Create and publish event </button> <br>
+        <a type="button" data-dismiss="modal" style="margin-bottom: 30px" #closeModal>Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container">
+  <form class="form-inline" [formGroup]="eventForm">
+    <input class="form-control w-75" formControlName="title" (keyup.enter)="this.page=0; searchEvent(this.search.value, this.category.value, this.duration.value); " type="text" placeholder="Search for an event name" aria-label="Search" #search>
+    <button type="button" class="secondary-btn my-0 ml-sm-2" (click)="this.page=0; searchEvent(this.search.value, this.category.value, this.duration.value); start = false; " > Search </button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"  (click)="clearForm(); searchEvent('', '','')"  > <span aria-hidden="true">&times;</span></button>
+  </form>
+
+  <p>
+    <button style="padding-left: 0px" type="button" class="btn btn-link" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+      Use Filter
+      <i class="fa fa-angle-down" aria-hidden="true"></i>
+    </button>
+  </p>
+
+  <div id="collapseExample" [ngbCollapse]="isCollapsed">
+    <div class="card" style="margin-right: 80px;">
+      <div class="card-body">
+
+        <h6 style="margin-top: 3px">Filter</h6>
+        <form class="form-row" [formGroup]="eventForm">
+
+          <div class="form-group col-md-3">
+            <label>Category</label>
+            <select class="form-control" formControlName="category" #category>
+              <option *ngFor="let category of categories" [value]="category" > {{category}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label>Duration +/- 30 minutes</label>
+            <input class="form-control" formControlName="duration" #duration placeholder="Type in minutes">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <button type="button" class="btn  btn-light" style="margin-top: 32px; margin-left: 10px" (click)="clearFormFilter(); searchEvent(this.search.value, '','') "  >Delete</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="start==false">
+  <div class="containerCards" *ngIf="!error">
+    <div class="numberShows">{{totalElements}} event(s) found </div>
+    <div *ngIf="searchEvents.length===0">
+      <div class="alert alert-warning">
+        <strong>No Results</strong> There are no Events found with this input. Try it again with another input.
+      </div>
+    </div>
+    <div class="card-container">
+      <div  *ngFor="let event of searchEvents">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{event.title}}
+                  <button routerLink="/events-detail/{{event.id}}" type="button" class="primary-btn" style="float: right;">
+                    Details </button>
+                </h5>
+                <div> {{event.category}}
+                </div>
+                <div class ="duration">
+                  <i class="fa fa-clock-o" aria-hidden="true"></i> {{event.duration}} minutes
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class = pagination *ngIf="totalElements>pageSize">
+        <ui class="nav nav-pills">
+          <li>
+            <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+            <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+          </li>
+
+          <li>
+            <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ui>
+      </div>
+
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="containerCards">
+  <div *ngIf="isAdmin()" class="containerCards">
+    <h3>{{category}}</h3>
+    <div *ngIf="success" class="alert alert-success" role="alert">
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h5 class="alert-heading">Event Created</h5>
+      <p> {{successMessage}} </p>
+      <h></h>
+    </div>
+    <div class="numberArtists">Recently added</div>
+    <div class="card-container" style="margin-bottom: 50px" *ngIf="simpleEventList.length > 0">
+      <div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{this.simpleEventList[simpleEventList.length - 1].title}}
+                  <button routerLink="/events-detail/{{this.simpleEventList[simpleEventList.length - 1].id}}"
+                          type="button" class="primary-btn" style="float: right;">
+                    Details
+                  </button>
+                </h5>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="numberArtists">{{simpleEventList.length}} event(s) found</div>
+    <div class="card-container">
+      <div *ngFor="let event of simpleEventList">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{event.title}}
+                  <button routerLink="/events-detail/{{event.id}}" type="button" class="primary-btn"
+                          style="float: right;">
+                    Details
+                  </button>
+                </h5>
+                <div> {{event.category}}
+                </div>
+                <div class="duration">
+                  <i class="fa fa-clock-o" aria-hidden="true"></i> {{event.duration}} minutes
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+

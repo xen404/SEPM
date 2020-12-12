@@ -1,0 +1,55 @@
+.cs {
+  margin: 100px 5px;
+  text-align: justify;
+}
+
+.fit-image{
+  width: 100%;
+  object-fit: cover;
+  height: 430px; /* only if you want fixed height */
+}
+
+.container{
+  margin-top: 30px;
+}
+
+.card-body{
+  padding: 10px;
+}
+
+.card{
+  margin-bottom: 10px;
+}
+.containerCards{
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 100px;
+}
+
+.page-header {
+  text-align: justify;
+}
+
+.mt-2 {
+  word-wrap: break-word;
+  max-width: 800px;
+
+}
+
+#inputQuantity {
+  text-align: center;
+  width: 100px;
+
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

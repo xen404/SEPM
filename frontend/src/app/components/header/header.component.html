@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg" *ngIf="!authService.isLoggedIn() || !isAdmin()">
+  <a class="navbar-brand ml-lg-5" class="logo" href="">Ticketline</a>
+  <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/events" >Events</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/artist" >Artists</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/venues" >Venues</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/shows" >Shows</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news" >News</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-5">
+      <button type="button" class="accent-btn" *ngIf="!authService.isLoggedIn()" routerLink="/login"> Login </button>
+      <button type="button" class="accent-btn-outlined" *ngIf="!authService.isLoggedIn()" routerLink="/signUp"> Sign up </button>
+
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn()">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{userService.getLoggedInUser().firstName}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/user-profil">My Profil</a>
+          <a class="dropdown-item" href="/user-bonus">My Bonus</a>
+          <a class="dropdown-item" href="/my-orders/">My Orders</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/" (click)="authService.logoutUser()">Log out</a>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</nav>

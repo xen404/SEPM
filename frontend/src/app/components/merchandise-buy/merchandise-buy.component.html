@@ -1,0 +1,237 @@
+<div *ngIf="merchandise">
+
+  <div class="alert alert-secondary" role="alert" *ngIf=" merchandise.bonus && merchandise.bonusPoints <= userService.getLoggedInUser().bonusPoints">
+    This item is also available as a bonus! Go check out <b><i> My Bonus </i></b> to get this bonus.
+  </div>
+
+  <div class="page-header">
+    <img [src]="getSanitizer()" class="img-responsive fit-image" alt="Responsive image" >
+  </div>
+
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-10 col-lg-8 mx-auto">
+
+        <h2 class="font-weight-light">{{merchandise.title}}</h2>
+
+
+        <p class="mt-2"> {{merchandise.description}} </p>
+
+        <strong>Price</strong>
+        <p> {{merchandise.price}} €</p>
+
+        <div style="margin-bottom: 50px">
+          <label for="inputQuantity"> Quantity </label>
+          <button (click)="decrementQuantity()" class="btn btn-default" [disabled]="quantity<= 1" >-</button>
+            <input [(ngModel)]="quantity" (change)="correctQuantity()" type="number" name="inputQuantity" min="1" max="99" id="inputQuantity">
+          <button class="btn btn-default" (click)="incrementQuantity()">+</button>
+          <div *ngIf="wrongInput" class="error">
+            <small class="form-text text-warning">
+              Quantity must be at least 1.
+            </small>
+          </div>
+        </div>
+        <button type="button" class="primary-btn" data-toggle="modal" data-target=".purchase-modal" data-keyboard="false" data-backdrop="static" (click)="calculateTotalPrice()">Buy merchandise item(s)</button>
+    </div>
+  </div>
+</div>
+  <div class="modal fade purchase-modal" tabindex="-1" role="dialog" aria-labelledby="Purchase merchandise modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div *ngIf="!paying && !paymentSuccessful" class="modal-content">
+        <div class="modal-header mb-4">
+          <h4 class="modal-title">Buy merchandise</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-left">
+          <div class="mb-5">
+            <h5>{{merchandise.title}}</h5>
+            <p>
+              <img [src]="getSanitizer()" class="img-responsive fit-image" alt="Responsive image" style="margin-bottom: 20px">
+              {{merchandise.description}}
+            </p>
+          </div>
+          <div class="mb-5">
+            <h5>Item(s)</h5>
+             <table class="table table-borderless w-75 text-left mx-auto">
+               <tbody>
+               <tr>
+                 <td>{{quantity}} x {{merchandise.title}}</td>
+                 <td class="text-right">€ {{merchandise.price}}</td>
+               </tr>
+               <tr class="border-top">
+                 <td></td>
+                 <td class="text-right">Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;€ {{totalPrice.toFixed(2)}}</td>
+               </tr>
+               </tbody>
+             </table>
+          </div>
+          <div class="mb-5">
+            <h5>Payment type</h5>
+            <div class="form-check">
+              <input class="form-check-input" id="payment1" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="credit">
+              <label class="form-check-label" for="payment1">
+                Credit Card
+              </label>
+              <form [formGroup]="cardForm" *ngIf="paymentType == 'credit'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputOwner">Owner</label>
+                  <input formControlName="owner" type="text" name="owner" class="form-control w-20rem" id="inputOwner" placeholder="Type in the name of the card owner">
+                  <div *ngIf="submitted && cardForm.controls.owner.errors" class="error">
+                    <small class="form-text text-warning">
+                      Owner is required!
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputCardNr">Card Number</label>
+                  <input formControlName="cardNumber" type="text" name="cardNr" class="form-control w-20rem" id="inputCardNr" placeholder="Type in the card number">
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Card number is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.invalid" class="error">
+                    <small class="form-text text-warning">
+                      That is an invalid card number.
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is an invalid card number. It does not have the correct pattern.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputMonth">Expiration Date</label><br>
+                  <select formControlName="month" class="col-sm-1 custom-select custom-select-sm mr-2" id="inputMonth">
+                    <option *ngFor="let month of months" value="{{month}}">{{month}}</option>
+                  </select>
+                  <select formControlName="year" class="col-sm-2 custom-select custom-select-sm" id="inputYear">
+                    <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                  </select>
+                </div>
+                <div class="mt-3">
+                  <label for="inputCVV">CVV</label>
+                  <input formControlName="cvv" type="text" name="cvv" class="form-control col-sm-2" id="inputCVV" placeholder="CVV">
+                  <div *ngIf="submitted && cardForm.controls.cvv.errors" class="error">
+                    <small class="form-text text-warning">
+                      Valid card validation value (CVV) is required!
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" id="payment2" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="paypal" (click)="changePaymentType()">
+              <label class="form-check-label" for="payment2">
+                PayPal
+              </label>
+              <form [formGroup]="paypalForm" *ngIf="paymentType == 'paypal'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputEmail">Email Address used for PayPal</label>
+                  <input formControlName="emailAddress" type="text" name="emailAdress" class="form-control w-20rem" id="inputEmail" placeholder="Type your email address">
+                  <div *ngIf="submitted && paypalForm.controls.emailAddress.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      An email address is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && paypalForm.controls.emailAddress.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid email address.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputPassword">Password</label>
+                  <input type="password" name="password" formControlName="password" class="form-control w-20rem" id="inputPassword"
+                         placeholder="Type in your PayPal Password">
+                  <div *ngIf="submitted && paypalForm.controls.password.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your password is required!
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" id="payment3" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="immediate" (click)="changePaymentType()">
+              <label class="form-check-label" for="payment3">
+                Immediate Payment
+              </label>
+              <form [formGroup]="immediateForm" *ngIf="paymentType == 'immediate'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputBank">Bank</label><br>
+                  <select formControlName="bank" class="col-sm-6 custom-select custom-select-sm" id="inputBank">
+                    <option *ngFor="let bank of banks" value="{{bank}}">{{bank}}</option>
+                  </select>
+                </div>
+                <div class="mt-3">
+                  <label for="inputSignatoryNumber">Signatory Number</label>
+                  <input type="text" name="signatoryNumber" formControlName="signatoryNumber" class="form-control w-20rem" id="inputSignatoryNumber"
+                         placeholder="Type in your signatory number">
+                  <div *ngIf="submitted && immediateForm.controls.signatoryNumber.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your password is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && immediateForm.controls.signatoryNumber.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid signatory number.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputPin">PIN</label>
+                  <input type="password" name="pin" formControlName="pin" class="form-control w-20rem" id="inputPin"
+                         placeholder="Type in your PIN">
+                  <div *ngIf="submitted && immediateForm.controls.pin.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your PIN is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && immediateForm.controls.pin.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid PIN.
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="accent-btn" (click)="purchase()">Buy merchandise item(s)</button> <br>
+          <a type="button"  data-dismiss="modal" style="margin-bottom: 30px">Cancel</a>
+        </div>
+      </div>
+      <div *ngIf="paying" class="modal-content">
+        <div class="modal-body text-left">
+          <div class="my-5 text-center primary-text">
+            <div class="spinner-border align-middle" role="status">
+            </div>
+            <span class="align-middle ml-2">Payment in process...</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="paymentSuccessful" class="modal-content">
+        <div class="modal-body text-left">
+          <div class="my-5 text-center">
+            <h4 class="mb-4">Thank you for your order!</h4>
+            <img src="../../../assets/images/Illustration.png" class="img-responsive fit-image" alt="..." style="margin-bottom: 50px">
+
+
+            <p class="mb-0">You can pick up your merchandise item(s) at any Ticketline store <br>
+              with the order confirmation we have sent you to: <b>{{userService.getLoggedInUser().email}}</b></p>
+
+            <a type="button" class="primary-btn" href="/" style="margin-top: 50px">Back to landing page</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

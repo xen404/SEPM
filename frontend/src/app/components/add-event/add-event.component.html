@@ -1,0 +1,119 @@
+
+<div *ngIf="successCreated" class="alert alert-success" role="alert" style="width: 100%">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <h5 class="alert-heading">Event Created</h5>
+  <p> {{successCreatedMessage}} </p>
+
+  <button type="button" class="secondary-btn-sm" routerLink="/events-detail/{{id}}"> View new event </button>
+
+  <h></h>
+</div>
+
+  <button *ngIf="isAdmin()" type="button" class="accent-btn" data-toggle="modal" data-target=".create-event-modal">Add a new event</button>
+  <div class="modal fade create-event-modal" tabindex="-1" role="dialog" aria-labelledby="Create event modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create event</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form" [formGroup]="eventForm" (ngSubmit)="addEvent()">
+
+            <div class="form-group">
+              <label for="inputTitle">Title</label>
+              <input type="text" name="title" formControlName="title" class="form-control" id="inputTitle"
+                     aria-describedby="titleHelp" placeholder="Enter title">
+              <div *ngIf="submitted && eventForm.controls.title.errors" class="error">
+                <small class="form-text text-warning" *ngIf="eventForm.controls.title.errors.required">Your title is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <fieldset class="form-group">
+
+                <label>Upload Image </label>
+                <div *ngIf="imageError"
+                     class="alert alert-danger">
+                  {{ imageError }}
+                </div>
+                <div *ngIf="submitted && eventForm.controls.image.errors.required">
+                  <small class="form-text text-warning">
+                    An image is required!
+                  </small>
+                </div>
+                <div class="custom-file fileInputProfileWrap">
+                  <input type="file" (change)="onFileSelected($event)" class="fileInputProfile">
+                  <div class="img-space">
+
+                    <ng-container *ngIf="isImageSaved; else elseTemplate">
+                      <img [src]="cardImageBase64"/>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+
+                      <img src="../../../assets/images/placeholder.png" class="img-responsive"/>
+                    </ng-template>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="form-group">
+              <label for="inputCategory">Category</label>
+              <select name="category" formControlName="category" class="form-control" id="inputCategory"
+                      aria-describedby="categoryHelp" placeholder="Choose category">
+                <option value="CABARET">CABARET</option>
+                <option value="CINEMA">CINEMA</option>
+                <option value="CONCERT">CONCERT</option>
+                <option value="CIRCUS">CIRCUS</option>
+                <option value="OPERA">OPERA</option>
+                <option value="MUSICAL">MUSICAL</option>
+                <option value="THEATRE">THEATRE</option>
+              </select>
+              <div *ngIf="submitted && eventForm.controls.category.errors" class="error">
+                <small class="form-text text-warning" *ngIf="eventForm.controls.category.errors.required">Your category is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputDuration">Duration <small>(in minutes, eg: 120 for a 2 hours event)</small></label>
+              <input type="number" name="duration" formControlName="duration" class="form-control" id="inputDuration"
+                     aria-describedby="durationHelp" placeholder="Enter duration">
+              <div *ngIf="submitted && eventForm.controls.duration.errors" class="error">
+                <small class="form-text text-warning" *ngIf="eventForm.controls.duration.errors.required">Your duration is
+                  required!
+                </small>
+                <small class="form-text text-warning" *ngIf="eventForm.controls.duration.errors.min">Your duration must be
+                  positive!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputDescription">Description</label>
+              <textarea rows="6" name="text" formControlName="description" class="form-control" id="inputDescription"
+                        aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
+              <div *ngIf="submitted && eventForm.controls.description.errors" class="error">
+                <small class="form-text text-warning" *ngIf="eventForm.controls.description.errors.required">Your description is
+                  required!
+                </small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="text-center">
+          <button type="button" class="accent-btn" (click)="addEvent()"> Create and publish event </button> <br>
+          <a type="button" data-dismiss="modal" style="margin-bottom: 30px" #closeModal>Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>

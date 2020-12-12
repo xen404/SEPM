@@ -1,0 +1,178 @@
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="m-4">
+  <h3>Manage User Accounts</h3>
+  <div class="row">
+    <div class="column">
+      <h6>Total amount of users: {{allUsers}}</h6>
+      <h6 *ngIf="foundUsers!=0">{{foundUsers}} user(s) found </h6>
+    </div>
+  </div>
+    <form class="form-inline">
+      <input class="form-control w-75 " (keyup.enter)="searchUser(this.search.value);requestSearch(true)" type="text"
+             placeholder="Search for user's email"
+             aria-label="Search" id="searchField" #search>
+      <button type="button" class="secondary-btn my-0 ml-sm-2"
+              (click)="searchUser(this.search.value);requestSearch(true)"> Search
+      </button>
+
+      <button type="button" (click)="loadUsers();requestSearch(false)" class="close" data-dismiss="alert"
+              aria-label="Close" onclick="document.getElementById('searchField').value = ''" *ngIf="searched">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+    </form>
+</div>
+
+<div *ngIf="users.length===0">
+  <div class="alert alert-warning">
+    <strong>No Results</strong> There are no users found with this email.
+  </div>
+</div>
+  <table>
+    <tr>
+      <th>Email</th>
+      <th>Name</th>
+      <th>User Group</th>
+      <th>Status</th>
+      <th>Reset Password</th>
+    </tr>
+    <tr *ngFor="let user of users">
+      <td>{{user.email}}</td>
+      <td>{{user.firstName}}&nbsp;{{user.surname}}</td>
+      <td>
+        <div *ngIf="user.admin">
+          Admin
+        </div>
+        <div *ngIf="!user.admin">
+          Costumer
+        </div>
+      </td>
+      <td>
+
+        <div *ngIf="user.access"> active
+          <button type="button" class="accent-btn-xs" style="float: right" (click)="requestChangeStatus(user, true)"
+                  *ngIf="(!editStatus[users.indexOf(user)]) && (userService.getLoggedInUser().id!= user.id)">
+            Change Status
+          </button>
+          <button type="button" class="accent-btn-sm-filled" style="float: right" (click)="lockUser(user)"
+                  *ngIf="editStatus[users.indexOf(user)]">
+            Lock User
+          </button>
+          <button type="button" (click)="requestChangeStatus(user, false)" class="close" data-dismiss="alert"
+                  aria-label="Close" *ngIf="editStatus[users.indexOf(user)]">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div *ngIf="!user.access"> locked
+          <button type="button" class="accent-btn-xs" style="float: right" (click)="requestChangeStatus(user, true)"
+                  *ngIf="!editStatus[users.indexOf(user)]">
+            Change Status
+          </button>
+          <button type="button" class="accent-btn-sm-filled" style="float: right" (click)="unlockUser(user)"
+                  *ngIf="editStatus[users.indexOf(user)]">
+            Unlock User
+          </button>
+          <button type="button" (click)="requestChangeStatus(user, false)" class="close" data-dismiss="alert"
+                  aria-label="Close" *ngIf="editStatus[users.indexOf(user)]">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+      </td>
+
+      <td>
+        <button type="button" class="secondary-btn-xs" style="float: left" (click)="requestChangePassword(user, true)"
+                *ngIf="!editPassword[users.indexOf(user)] && !changed[users.indexOf(user)]">
+          Change Password
+        </button>
+        <div *ngIf="changed[users.indexOf(user)]" class="alert alert-success alert-dismissible fade show" role="alert" style="float: left">
+          <strong>Password changed!</strong>
+          <button type="button" (click)="vanishAlert(user)" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <form class="form" [formGroup]="passwordForm" (ngSubmit)="changePassword(user)">
+          <div class="changePassword" *ngIf="editPassword[users.indexOf(user)]">
+            <button type="button" (click)="requestChangePassword(user, false)" class="close" data-dismiss="alert"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+
+            <div class="form-group">
+              <label for="firPassword">Password</label>
+              <input type="password" name="password" formControlName="password" class="form-control" id="firPassword"
+                     placeholder="Type in a Password">
+              <div *ngIf="submitted[this.users.indexOf(user)] && passwordForm.controls.password.errors" class="error">
+                <small class="form-text text-warning" *ngIf="passwordForm.controls.password.errors.required">Your
+                  password
+                  is
+                  required!
+                </small>
+                <small class="form-text text-warning" *ngIf="passwordForm.controls.password.errors.minlength">Your
+                  password
+                  must be at least 8 characters long!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="secPassword">Confirm Password</label>
+              <input type="password" name="rePassword" formControlName="rePassword" class="form-control"
+                     id="secPassword"
+                     placeholder="Repeat Password">
+              <div *ngIf="submitted[this.users.indexOf(user)] && passwordForm.controls.rePassword.errors" class="error">
+                <small class="form-text text-warning" *ngIf="passwordForm.controls.rePassword.errors.required">Your have
+                  to confirm
+                  your password!
+                </small>
+                <small class="form-text text-warning" *ngIf="passwordForm.controls.rePassword.errors.misMatch">Your
+                  password is
+                  incorrect!
+                </small>
+              </div>
+            </div>
+
+            <button type="button" class="primary-btn-sm" style="float: left" (click)="changePassword(user)">
+              Save Password
+            </button>
+          </div>
+        </form>
+
+      </td>
+    </tr>
+
+  </table>
+
+<div class="m-4">
+<div class = pagination *ngIf="allUsers>pageSize">
+  <ui class="nav nav-pills">
+    <li>
+      <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+
+    <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+      <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+    </li>
+
+    <li>
+      <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ui>
+</div>
+</div>

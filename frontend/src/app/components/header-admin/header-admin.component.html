@@ -1,0 +1,29 @@
+<p class="top" *ngIf="authService.isLoggedIn() && isAdmin()">
+  Logged in as: {{userService.getLoggedInUser().email}}
+</p>
+
+<ul class="nav flex-column" id="sidenav" *ngIf="authService.isLoggedIn() && isAdmin()">
+  <p class="logo">Ticketline</p>
+  <li class="nav-item dropdown" *ngIf="authService.isLoggedIn()">
+    <a class="nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      User management
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" routerLink="/user-register">Register Users</a>
+      <a class="dropdown-item" routerLink="/user-management">Manage Users</a>
+    </div>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/events" >Events</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  routerLink="/news" >News</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"  routerLink="/merchandise"> Merchandise </a>
+  </li>
+  <li class="bottom">
+    <a class="nav-link" id="logout" (click)="authService.logoutUser()" href="">Logout</a>
+  </li>
+</ul>
+

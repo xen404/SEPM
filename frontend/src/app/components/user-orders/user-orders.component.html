@@ -1,0 +1,241 @@
+<h2>My orders:</h2>
+<div class="card-container">
+
+
+  <app-single-order *ngFor="let ticketListWithId of ticketMatrix; let i = index" [ticketList]="ticketListWithId" [orderNumber]="i" (purchaseTickets)="setTicketsToPurchase($event)"></app-single-order>
+
+  <div class="modal fade purchase-modal" tabindex="-1" role="dialog" aria-labelledby="Purchase tickets modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div *ngIf="!paying && !paymentSuccessful && !paymentError" class="modal-content">
+        <div class="modal-header mb-4">
+          <h4 class="modal-title">Purchase tickets</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-left">
+          <div class="mb-5" *ngIf="show && event">
+            <h5>Show details</h5>
+            <p>
+              {{show.title}}<br>
+              <span *ngIf="artists.length == 1">{{artists[0].name}}</span>
+              <span *ngIf="artists.length > 1">
+                  <span *ngFor="let artist of artists; index as i">
+                    {{artist.name}}<span *ngIf="i < artists.length - 2">, </span>
+                    <span *ngIf="i == artists.length - 2"> & </span>
+                  </span>
+                </span>
+            </p>
+            <p>
+              <span class="text-uppercase">{{show.location.city}}</span>, {{show.location.description}}<br>
+              {{startDate}}, {{startTime}} - {{endDate}}, {{endTime}}
+            </p>
+          </div>
+          <div class="mb-5">
+            <h5>Ticket(s)</h5>
+            <small>The reservation for tickets not selected for purchase will expire.</small>
+            <table class="table table-borderless w-75 text-left mx-auto">
+              <tbody>
+              <tr *ngFor="let ticket of reservedTickets">
+                <td>
+                  <input type="checkbox" [value]="ticket.id"
+                       (change)="onTicketsToPurchaseChange($event)" checked/>
+                </td>
+                <td>Sector {{ticket.sector}} · Row {{ticket.seat.rowNr}}, Seat {{ticket.seat.seatNr}}</td>
+                <td class="text-right">€ {{ticket.price.toFixed(2)}}</td>
+              </tr>
+              <tr class="border-top">
+                <td></td>
+                <td></td>
+                <td class="text-right">Total:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;€ {{totalPrice.toFixed(2)}}</td>
+              </tr>
+              <tr class="border-top">
+                <td></td>
+                <td></td>
+                <td class="text-right"><small>Bonus Point credit (10% of the total sum):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </small>{{bonusPointCredit}}</td>
+              </tr>
+              </tbody>
+            </table>
+            <div *ngIf="submitted && ticketIdsToPurchase.length == 0" class="error">
+              <small class="form-text text-warning">
+                You have to select at least one ticket.
+              </small>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h5>Payment type</h5>
+            <div class="form-check">
+              <input class="form-check-input" id="payment1" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="credit">
+              <label class="form-check-label" for="payment1">
+                Credit Card
+              </label>
+              <form [formGroup]="cardForm" *ngIf="paymentType == 'credit'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputOwner">Owner</label>
+                  <input formControlName="owner" type="text" name="owner" class="form-control w-20rem" id="inputOwner" placeholder="Type in the name of the card owner">
+                  <div *ngIf="submitted && cardForm.controls.owner.errors" class="error">
+                    <small class="form-text text-warning">
+                      Owner is required!
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputCardNr">Card Number</label>
+                  <input formControlName="cardNumber" type="text" name="cardNr" class="form-control w-20rem" id="inputCardNr" placeholder="Type in the card number">
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Card number is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.invalid" class="error">
+                    <small class="form-text text-warning">
+                      That is an invalid card number.
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && cardForm.controls.cardNumber.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is an invalid card number. It does not have the correct pattern.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputMonth">Expiration Date</label><br>
+                  <select formControlName="month" class="col-sm-1 custom-select custom-select-sm mr-2" id="inputMonth">
+                    <option *ngFor="let month of months" value="{{month}}">{{month}}</option>
+                  </select>
+                  <select formControlName="year" class="col-sm-2 custom-select custom-select-sm" id="inputYear">
+                    <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                  </select>
+                </div>
+                <div class="mt-3">
+                  <label for="inputCVV">CVV</label>
+                  <input formControlName="cvv" type="text" name="cvv" class="form-control col-sm-2" id="inputCVV" placeholder="CVV">
+                  <div *ngIf="submitted && cardForm.controls.cvv.errors" class="error">
+                    <small class="form-text text-warning">
+                      Valid card validation value (CVV) is required!
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" id="payment2" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="paypal" (click)="changePaymentType()">
+              <label class="form-check-label" for="payment2">
+                PayPal
+              </label>
+              <form [formGroup]="paypalForm" *ngIf="paymentType == 'paypal'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputEmail">Email Address used for PayPal</label>
+                  <input formControlName="emailAddress" type="text" name="emailAddress" class="form-control w-20rem" id="inputEmail" placeholder="Type your email address">
+                  <div *ngIf="submitted && paypalForm.controls.emailAddress.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      An email address is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && paypalForm.controls.emailAddress.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid email address.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputPassword">Password</label>
+                  <input type="password" name="password" formControlName="password" class="form-control w-20rem" id="inputPassword"
+                         placeholder="Type in your PayPal Password">
+                  <div *ngIf="submitted && paypalForm.controls.password.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your password is required!
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" id="payment3" type="radio" name="paymentRadio" [(ngModel)]="paymentType" value="immediate" (click)="changePaymentType()">
+              <label class="form-check-label" for="payment3">
+                Immediate Payment
+              </label>
+              <form [formGroup]="immediateForm" *ngIf="paymentType == 'immediate'" class="ml-3 mb-3">
+                <div class="mt-3">
+                  <label for="inputBank">Bank</label><br>
+                  <select formControlName="bank" class="col-sm-6 custom-select custom-select-sm" id="inputBank">
+                    <option *ngFor="let bank of banks" value="{{bank}}">{{bank}}</option>
+                  </select>
+                </div>
+                <div class="mt-3">
+                  <label for="inputSignatoryNumber">Signatory Number</label>
+                  <input type="text" name="signatoryNumber" formControlName="signatoryNumber" class="form-control w-20rem" id="inputSignatoryNumber"
+                         placeholder="Type in your signatory number">
+                  <div *ngIf="submitted && immediateForm.controls.signatoryNumber.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your password is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && immediateForm.controls.signatoryNumber.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid signatory number.
+                    </small>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <label for="inputPin">PIN</label>
+                  <input type="password" name="pin" formControlName="pin" class="form-control w-20rem" id="inputPin"
+                         placeholder="Type in your PIN">
+                  <div *ngIf="submitted && immediateForm.controls.pin.errors.required" class="error">
+                    <small class="form-text text-warning">
+                      Your PIN is required!
+                    </small>
+                  </div>
+                  <div *ngIf="submitted && immediateForm.controls.pin.errors.pattern" class="error">
+                    <small class="form-text text-warning">
+                      That is not a valid PIN.
+                    </small>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button type="button" class="accent-btn" (click)="purchaseTickets()">Buy ticket(s)</button> <br>
+          <a type="button"  data-dismiss="modal" style="margin-bottom: 30px">Cancel</a>
+        </div>
+      </div>
+      <div *ngIf="paying && !paymentError" class="modal-content">
+        <div class="modal-body text-left">
+          <div class="my-5 text-center primary-text">
+            <div class="spinner-border align-middle" role="status">
+            </div>
+            <span class="align-middle ml-2">Payment in process...</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="paymentSuccessful && !paymentError" class="modal-content">
+        <div class="modal-body text-left">
+          <div class="my-5 text-center">
+            <h4 class="mb-4">Thank you for your order!</h4>
+            <img src="../../../assets/images/Illustration.png" class="img-responsive fit-image" alt="..." style="margin-bottom: 50px">
+            <p class="mb-4">Your invoice:</p>
+            <button (click)=" exportPurchasedTicketPdf()" class="accent-btn">Download PDF</button>
+            <p>You can find details for your order under "My Orders".</p>
+            <p> You have been credited with <b>{{bonusPointCredit}} bonus points </b> for this order. </p>
+            <a type="button" class="secondary-btn" href="/">Back to landing page</a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="paymentError" class="modal-content">
+        <div class="modal-body text-center">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>There were problems with your payment!</strong>
+            <p>{{ paymentErrorMessage }}</p>
+          </div>
+          <a type="button" class="primary-btn" href="/">Back to landing page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+

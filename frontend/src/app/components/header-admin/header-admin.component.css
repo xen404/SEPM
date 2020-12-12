@@ -1,0 +1,80 @@
+body {
+  font-family: "Lato", sans-serif;
+}
+
+#sidenav {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #202E53;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+
+#sidenav a:hover {
+  color: #FA9284;
+}
+
+.nav-link  {
+  padding: 60px 8px 6px 6px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  margin: 20px;
+  font-family: "Lato", sans-serif;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+#logout {
+  font-family: Arial;
+  margin-bottom: 2px;
+  color: #FFFFFF;
+}
+
+.logo {
+  padding: 6px 8px 6px 20px;
+  font-family: "Lato", sans-serif;
+  font-size: 35px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.logoSubtext {
+  font-family: "Lato", sans-serif;
+  font-size: 18px;
+  color: #748EB6;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+
+.dropdown-menu {
+  background-color: #202E53;
+  border: none;
+}
+
+.dropdown-menu a:hover {background-color: #202E53}
+
+.dropdown-item{
+  font-family: "Lato", sans-serif;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.bottom {
+  position: fixed;
+  margin-left: 20px;
+  bottom: 0;
+}
+.top {
+  text-align: right;
+  top: 0;
+  right: 0;
+  color:  #616161;
+}
+

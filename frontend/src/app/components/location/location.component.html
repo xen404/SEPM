@@ -1,0 +1,138 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>No search results: </strong>{{ errorMessage }}
+  <button type="button" (click)="vanishError() && clearForm()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="jumbotron">
+  <div id="black"></div>
+  <div style="" class="animated fadeInDown">
+    <div class="container-fluid">
+      <div class="col-md-5 col-md-offset-1">
+        <h1>Venues<br class="visible-lg "/></h1>
+        <hr style="width:25%;text-align:left;margin:30px 0; border:2.5px solid #fff;"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="container">
+    <form class="form-inline" [formGroup]="locationForm">
+      <input class="form-control w-75" formControlName="description" (keyup.enter)="this.page=0; searchLocation(this.description.value, this.city.value, this.country.value, this.street.value, this.zipcode.value)" type="text" placeholder="Search for a venue" aria-label="Search" #description>
+      <button type="button" class="secondary-btn my-0 ml-sm-2" (click)="this.page=0; searchLocation(this.description.value, this.city.value, this.country.value, this.street.value, this.zipcode.value)" > Search </button>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"  (click)="clearForm(); searchLocation('','','','', '')"  > <span aria-hidden="true">&times;</span></button>
+    </form>
+
+
+    <p>
+      <button  style="padding-left: 0;" type="button" class="btn btn-link" (click)="isCollapsed = !isCollapsed"
+              [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+        Use Filter
+        <i class="fa fa-angle-down" aria-hidden="true"></i>
+      </button>
+    </p>
+    <div id="collapseExample" [ngbCollapse]="isCollapsed">
+      <div class="card" style="margin-right: 80px;">
+        <div class="card-body">
+
+    <h6 style="margin-top: 3px">Filter</h6>
+    <form class="form-row" [formGroup]="locationForm">
+
+      <div class="form-group">
+        <label>Search for country</label>
+        <select class="form-control" formControlName="country" #country>
+          <option *ngFor="let country of countries" [value]="country" > {{country}}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label>Search for city</label>
+        <select class="form-control" formControlName="city" #city>
+          <option *ngFor="let cities of cities" [value]="cities" > {{cities}}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-auto">
+        <label>Search for zipcode</label>
+        <select class="form-control" formControlName="zipcode" #zipcode>
+          <option *ngFor="let zipCode of zipCodes" [value]="zipCode" > {{zipCode}}</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label>Search for Street</label>
+        <input class="form-control" formControlName="street" #street>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <button type="button" class="btn  btn-light" style="margin-top: 32px; margin-left: 10px" (click)="clearForm();searchLocation(this.description.value, '','','','') "  >Delete</button>
+        </div>
+      </div>
+     </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="containerCards" *ngIf="!error">
+  <div class="numberArtists">{{totalElements}} venue(s) found </div>
+  <div *ngIf="totalElements===0">
+    <div class="alert alert-warning">
+      <strong>No Results</strong> There are no Venues with your Input. Please try ist again.
+    </div>
+  </div>
+  <div class="card-container">
+    <div  *ngFor="let location of searchLocations">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{location.description}}
+                <button routerLink="/location-detail/{{location.id}}" type="button" class="primary-btn" style="float: right;">
+                  Details </button>
+              </h5>
+              <div class ="location">
+               <i class="fa fa-map-marker" aria-hidden="true"></i> {{location.street}}, {{location.zipCode}}, {{location.city}}, {{location.country}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class = pagination *ngIf="totalElements>pageSize">
+    <ui class="nav nav-pills">
+      <li>
+        <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+      <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+        <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+      </li>
+
+      <li>
+        <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ui>
+  </div>
+
+
+</div>
+
+
+

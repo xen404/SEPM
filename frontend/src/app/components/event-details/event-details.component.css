@@ -1,0 +1,89 @@
+.container{
+  margin-top: 30px;
+}
+
+.card-body{
+  padding: 10px;
+}
+
+.card{
+  margin-bottom: 10px;
+}
+.containerCards{
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.numberArtists{
+  margin-bottom: 10px;
+  color: grey;
+}
+
+.numberArtists{
+  margin-bottom: 10px;
+  color: grey;
+}
+
+.artistsShow {
+  padding-bottom: 20px;
+}
+
+.page-header {
+  text-align: center;
+}
+
+.mt-2 {
+  word-wrap: break-word;
+  max-width: 610px;
+}
+
+.merchandise {
+  margin-top: 35px;
+  padding-bottom: 20px;
+}
+
+.fit-image{
+  width: 100%;
+  object-fit: cover;
+  height: 430px; /* only if you want fixed height */
+}
+
+.container{
+  margin-top: 30px;
+  padding-left: 70px;
+}
+
+.jumbotron {
+  width: 100%;
+  min-height: 250px;
+  background: url('../../../assets/images/headerShow.jpg') center center;
+  background-size: cover;
+  opacity: 1;
+  display: table;
+  width: 100%;
+  position: relative;
+  border-radius: 0px;
+  color: white;
+  text-transform: uppercase;
+  margin: 0;
+  -webkit-clip-path: polygon(0 0%, 100% 0, 100% 100%, 0% 85%);
+  clip-path: url(#poly);
+  overflow: hidden;
+}
+
+.numberShows{
+  margin-bottom: 10px;
+  color: grey;
+}
+
+.location{
+  color: grey;
+  padding-top: 5px;
+  font-size: medium;
+}
+
+.date{
+  color: grey;
+  padding-top: 10px;
+  font-size: medium;
+}

@@ -1,0 +1,112 @@
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Authentication problems!</strong> {{ errorMessage }}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div *ngIf="registered" class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Your registration of user {{user.email}} has been successful!</strong>
+</div>
+
+
+
+<div class="pt-4">
+  <div class="row">
+
+
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formSignUp"></span>
+      <div class="card rounded-1">
+        <div class="card-header">
+          <div class = "a">
+            <h3 class="mb-0">Register new User</h3>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="registerForm" (ngSubmit)="registerUser()">
+
+            <div class="form-group">
+              <label for="inputFirstName">First Name</label>
+              <input type="text" name="firstName" formControlName="firstName" class="form-control" id="inputFirstName"
+                     aria-describedby="firstNameHelp" placeholder="Type in your first name">
+              <div *ngIf="submitted && registerForm.controls.firstName.errors" class="error">
+                <small class="form-text text-warning" *ngIf="registerForm.controls.firstName.errors.required">Your first name is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputSurname">Surname</label>
+              <input type="text" name="surname" formControlName="surname" class="form-control" id="inputSurname"
+                     aria-describedby="surnameHelp" placeholder="Type in your surname">
+              <div *ngIf="submitted && registerForm.controls.surname.errors" class="error">
+                <small class="form-text text-warning" *ngIf="registerForm.controls.surname.errors.required">Your surname is
+                  required!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputEmail">E-Mail Address</label>
+              <input type="text" name="email" formControlName="email" class="form-control" id="inputEmail"
+                     aria-describedby="emailHelp" placeholder="Type in your E-Mail address">
+              <div *ngIf="submitted && registerForm.controls.email.errors" class="error">
+                <small class="form-text text-warning" *ngIf="registerForm.controls.email.errors.required">Your E-Mail address is
+                  required!
+                </small>
+                <small class="form-text text-warning" *ngIf="registerForm.controls.email.errors.pattern">Your E-Mail address is
+                  invalid!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="firPassword">Password</label>
+              <input type="password" name="password" formControlName="password" class="form-control" id="firPassword"
+                     placeholder="Type in a Password">
+              <div *ngIf="submitted && registerForm.controls.password.errors" class="error">
+                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Your password
+                  is
+                  required!
+                </small>
+                <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your password
+                  must be at least 8 characters long!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="secPassword">Confirm Password</label>
+              <input type="password" name="rePassword" formControlName="rePassword" class="form-control" id="secPassword"
+                     placeholder="Repeat Password">
+              <div *ngIf="submitted && registerForm.controls.rePassword.errors" class="error">
+                <small class="form-text text-warning" *ngIf="registerForm.controls.rePassword.errors.required">Your have to confirm
+                  your password!
+                </small>
+                <small class="form-text text-warning" *ngIf="registerForm.controls.rePassword.errors.misMatch">Your password is
+                  incorrect!
+                </small>
+              </div>
+            </div>
+
+            <div class="form-group">
+
+              <input type="checkbox" name="admin" formControlName="admin" class="admin" id="admin">
+              <label for="admin">&nbsp; Make Admin</label>
+            </div>
+
+            <div class="a">
+              <button type="button" (click)="registerUser()" class="primary-btn ">Save User</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<app-header></app-header>
+<app-header-admin></app-header-admin>
+
+<div class="admin-page-content" *ngIf="isAdmin(); else elseBlock">
+  <div class="m-4">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<ng-template #elseBlock>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
+
+
+
+<app-footer></app-footer>

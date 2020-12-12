@@ -1,0 +1,45 @@
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/artist">Artists</a></li>
+    <li class="breadcrumb-item active" aria-current="page" *ngIf="artist">{{artist.name}}</li>
+  </ol>
+</nav>
+
+
+
+<div *ngIf="artist">
+  <h2 style="margin-top: 30px;">{{artist.name}}
+  </h2>
+</div>
+
+<div style="margin-top: 30px;"> {{totalElements}} event(s)
+</div>
+
+<div class="containerCards">
+  <div class="card-container" >
+    <div  *ngFor="let event of this.events">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{event.title}}
+                <button routerLink="/events-detail/{{event.id}}" type="button" class="primary-btn" style="float: right;">
+                  Details </button>
+              </h5>
+              <div> {{event.shows.length}} shows(s)</div>
+              <p class="card-text">{{event.description}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="totalElements>pageSize">
+    <ui class="nav nav-pills">
+      <li class="nav-item" *ngFor="let p of pages; let i=index" style="margin-bottom: 30px">
+        <a class="nav-link" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+      </li>
+    </ui>
+  </div>
+</div>

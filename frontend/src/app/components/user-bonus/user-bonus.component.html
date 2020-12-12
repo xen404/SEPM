@@ -1,0 +1,65 @@
+<div *ngIf="success" class="alert alert-info" role="alert">
+  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="alert-heading">Yay!</h4>
+  <p> {{successMessage}} </p>
+  <div class="col-md-3">
+    <img src="../../../assets/images/Illustration.png" class="card-img" alt="...">
+  </div>
+  <hr>
+  <p class="mb-0" *ngIf="user">You can pick up your merchandise item at any Ticketline store with the order confirmation we have sent you to: <b>{{user.email}}</b></p>
+</div>
+
+
+<div class="mt-4 container">
+
+  <div class="row">
+
+      <h1>My Bonus</h1>
+
+  </div>
+
+  <div class="row">
+    <h5> You have collected a total of:  </h5>
+
+    <div class="box">
+      {{bonusPoints}} points
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 60px">
+    <h3> Available bonuses </h3>
+  </div>
+  <div class="row">
+    <div *ngIf="availableMerchandise.length > 0 else elseBlock">
+    <app-merchandise-item *ngFor="let merchandise of availableMerchandise" [buyOption]="false" [merchandise]="merchandise">
+    </app-merchandise-item>
+    </div>
+    <ng-template #elseBlock> Sad! There are no available bonuses for {{bonusPoints}} bonus points. You have to collect some more. </ng-template>
+
+    <div class = pagination *ngIf="merchandiseNum>pageSize">
+      <ui class="nav nav-pills">
+        <li>
+          <a class="nav-link" *ngIf="page-1>=0" href="" (click)="setPage(page-1, $event)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+
+        <li class="nav-item" *ngFor="let p of pages; let i=index"style="margin-bottom: 30px">
+          <a class="nav-link" *ngIf="i<=paginationLimitUp && i >= paginationLimitDown" href="" (click)="setPage(i, $event)" [ngClass]="{'active':i==page}">{{i}}</a>
+        </li>
+
+        <li>
+          <a class="nav-link" *ngIf="page+1<pages.length" href="" (click)="setPage(page+1, $event)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ui>
+    </div>
+  </div>
+</div>
+
+

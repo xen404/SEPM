@@ -1,0 +1,27 @@
+<div class="mt-4 container">
+  <div class="row">
+    <h2> Top 10 events in {{month}}</h2>
+  </div>
+  <div class="row">
+    <p>These are the top events per category according to ticket sales </p>
+  </div>
+  <div class="row">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li *ngFor="let category of categories; let i = index" class="nav-item" (click)="onClick(category)">
+        <a *ngIf="i==0; else notActive" class="nav-link active"  data-toggle="pill" href="#chart" role="tab" aria-selected="true">{{category}}</a>
+        <ng-template #notActive>
+          <a class="nav-link" data-toggle="pill" href="#chart" role="tab" aria-selected="false">{{category}}</a>
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+    <div class="chart" *ngIf="topEventData">
+      <ol>
+        <li *ngFor="let topEvent of activeData; let i = index">
+          <div class="box" id="i" [style.width.%]="((topEvent.accumulatedSoldTickets)/maxValue)*100" (click)="clickBox(topEvent.id)">
+            {{topEvent.title}}
+          </div>
+        </li>
+      </ol>
+    </div>
+</div>
