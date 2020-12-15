@@ -39,7 +39,7 @@ If the database is not clean, the test data won't be inserted
 
 
 
-# SEPM Group Phase
+# Frontend for SEPM Group Phase
 
 ## First Steps
 
